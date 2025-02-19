@@ -76,10 +76,7 @@ Your product description here...
               placeholder="Describe your product idea..."
               maxLength={MAX_CHARS}
             />
-            <div className="flex items-center justify-between w-full mt-2">
-              <div className="text-sm text-muted-foreground">
-                {prompt.length}/{MAX_CHARS}
-              </div>
+            <div className="flex items-center justify-end w-full mt-2">
               <ChatInputSubmit />
             </div>
           </ChatInput>
