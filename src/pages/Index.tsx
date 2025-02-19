@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Sparkles } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInput, ChatInputTextArea, ChatInputSubmit } from "@/components/ui/chat-input";
 
@@ -12,6 +12,7 @@ export default function Index() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
+  const [hasCopied, setHasCopied] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async () => {
@@ -43,10 +44,16 @@ Your product description here...
   const copyToClipboard = () => {
     if (generatedPRD) {
       navigator.clipboard.writeText(generatedPRD);
+      setHasCopied(true);
       toast({
         title: "Copied to clipboard",
         description: "Your PRD has been copied to clipboard",
       });
+      
+      // Reset the copy icon after 2 seconds
+      setTimeout(() => {
+        setHasCopied(false);
+      }, 2000);
     }
   };
 
@@ -87,7 +94,7 @@ Your product description here...
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Generated PRD</h2>
               <Button variant="outline" size="icon" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
+                {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
             <pre className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded-lg">
