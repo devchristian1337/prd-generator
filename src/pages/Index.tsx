@@ -52,8 +52,8 @@ Your product description here...
   };
 
   return (
-    <div className="min-h-screen section-padding">
-      <div className="max-w-4xl mx-auto space-y-8 fade-in">
+    <div className="min-h-screen section-padding flex flex-col items-center">
+      <div className="max-w-4xl w-full space-y-8 fade-in">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold tracking-tight">PRD Generator</h1>
           <p className="text-lg text-muted-foreground">
@@ -61,7 +61,7 @@ Your product description here...
           </p>
         </div>
 
-        <Card className="glass p-6">
+        <Card className="glass p-6 mx-auto max-w-2xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Textarea
@@ -94,7 +94,7 @@ Your product description here...
         </Card>
 
         {generatedPRD && (
-          <Card className="glass p-6 space-y-4 fade-in">
+          <Card className="glass p-6 space-y-4 fade-in mx-auto max-w-2xl">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Generated PRD</h2>
               <Button variant="outline" size="icon" onClick={copyToClipboard}>
