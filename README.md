@@ -1,7 +1,7 @@
 # SpecForge - PRD Generator
 
 <div align="center">
-  <img src="https://iili.io/2yZBUJ4.png">
+  <img src="https://iili.io/2ybYkss.png">
 </div>
 
 SpecForge is a modern web application that helps you generate professional Product Requirement Documents (PRDs) in seconds using AI technology. Built with React, TypeScript, and powered by Google's Gemini AI, it provides a seamless and efficient way to create detailed product specifications.
