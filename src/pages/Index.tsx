@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Check, Download } from "lucide-react";
+import { Copy, Check, Download, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -96,7 +96,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 scrollbar-custom">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 scrollbar-custom">
       <div
         className={`w-full max-w-2xl space-y-8 fade-in transition-all duration-500 ease-in-out ${
           generatedPRD ? "pt-16" : ""
@@ -219,6 +219,18 @@ export default function Index() {
           </Card>
         )}
       </div>
+      <footer className="fixed bottom-4 flex items-center justify-center gap-2 text-sm text-muted-foreground select-none">
+        <span className="pointer-events-none">Made by devchristian1337</span>
+        <a
+          href="https://github.com/devchristian1337"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center hover:text-foreground transition-colors"
+          aria-label="Visit devchristian1337's GitHub profile"
+        >
+          <Github className="h-4 w-4" />
+        </a>
+      </footer>
     </div>
   );
 }
