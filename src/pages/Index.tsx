@@ -1,10 +1,10 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Textarea } from "@/components/ui/textarea";
 import { Copy, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ChatInput, ChatInputTextArea, ChatInputSubmit } from "@/components/ui/chat-input";
 
 const MAX_CHARS = 500;
 
@@ -14,8 +14,7 @@ export default function Index() {
   const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsLoading(true);
 
     // Temporary mock response for demo
@@ -62,35 +61,28 @@ Your product description here...
         </div>
 
         <Card className="glass p-6 mx-auto max-w-2xl">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Textarea
-                placeholder="Describe your product idea..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="min-h-[100px] resize-none"
-                maxLength={MAX_CHARS}
-              />
-              <div className="text-sm text-muted-foreground text-right">
+          <ChatInput
+            value={prompt}
+            onChange={(e) => {
+              if (e.target.value.length <= MAX_CHARS) {
+                setPrompt(e.target.value);
+              }
+            }}
+            onSubmit={handleSubmit}
+            loading={isLoading}
+            onStop={() => setIsLoading(false)}
+          >
+            <ChatInputTextArea 
+              placeholder="Describe your product idea..."
+              maxLength={MAX_CHARS}
+            />
+            <div className="flex items-center justify-between w-full mt-2">
+              <div className="text-sm text-muted-foreground">
                 {prompt.length}/{MAX_CHARS}
               </div>
+              <ChatInputSubmit />
             </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={!prompt || isLoading}
-            >
-              {isLoading ? (
-                "Generating..."
-              ) : (
-                <>
-                  Generate PRD
-                  <Sparkles className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </form>
+          </ChatInput>
         </Card>
 
         {generatedPRD && (
