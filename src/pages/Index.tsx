@@ -3,6 +3,8 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Check, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Tooltip,
   TooltipContent,
@@ -104,12 +106,28 @@ export default function Index() {
             generatedPRD ? "-translate-y-4" : "translate-y-8"
           }`}
         >
-          <img
-            src="https://iili.io/2yZBUJ4.png"
-            alt="SpecForge Logo"
-            className="h-12 mx-auto mb-3"
-            aria-label="SpecForge"
-          />
+          <div
+            className="select-none pointer-events-none"
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            <img
+              src="https://iili.io/2yZBUJ4.png"
+              alt="SpecForge Logo"
+              className="h-12 mx-auto mb-3 select-none pointer-events-none user-select-none touch-none !cursor-default"
+              aria-label="SpecForge"
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
+              style={
+                {
+                  WebkitUserDrag: "none",
+                  WebkitTouchCallout: "none",
+                  pointerEvents: "none",
+                } as React.CSSProperties
+              }
+            />
+          </div>
           <p className="text-lg text-muted-foreground">
             Generate professional Product Requirement Documents in seconds
           </p>
@@ -192,9 +210,11 @@ export default function Index() {
                 </TooltipProvider>
               </div>
             </div>
-            <pre className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded-lg max-h-[60vh] overflow-y-auto scrollbar-custom">
-              {generatedPRD}
-            </pre>
+            <div className="prose prose-sm dark:prose-invert max-w-none bg-muted p-4 rounded-lg max-h-[60vh] overflow-y-auto scrollbar-custom">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {generatedPRD}
+              </ReactMarkdown>
+            </div>
           </Card>
         )}
       </div>

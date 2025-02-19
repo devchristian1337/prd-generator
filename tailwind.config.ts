@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -90,7 +91,33 @@ export default {
         "fade-up": "fade-up 0.5s ease-out",
         shimmer: "shimmer 2s infinite",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "none",
+            color: "inherit",
+            a: {
+              color: "inherit",
+              textDecoration: "underline",
+              fontWeight: "500",
+            },
+            code: {
+              color: "inherit",
+              background: "hsl(var(--muted))",
+              padding: "0.2em 0.4em",
+              borderRadius: "0.25em",
+              fontWeight: "400",
+            },
+            "code::before": {
+              content: '""',
+            },
+            "code::after": {
+              content: '""',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [animate],
+  plugins: [animate, typography],
 } satisfies Config;
