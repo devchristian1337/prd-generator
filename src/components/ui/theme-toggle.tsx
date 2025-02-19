@@ -20,7 +20,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <div className="fixed top-4 right-4">
+    <div className="absolute top-4 right-4">
       <div className="relative inline-grid h-9 grid-cols-[1fr_1fr] items-center text-sm font-medium">
         <Switch
           id={id}

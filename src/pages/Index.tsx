@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chat-input";
 import { geminiService } from "@/services/gemini";
 import { ScrollShadow } from "@heroui/scroll-shadow";
+import { cn } from "@/lib/utils";
 
 const MAX_CHARS = 500;
 
@@ -96,15 +97,15 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 scrollbar-custom">
+    <div className="min-h-screen flex flex-col">
       <div
-        className={`w-full max-w-2xl space-y-8 fade-in transition-all duration-500 ease-in-out ${
-          generatedPRD ? "pt-16" : ""
+        className={`flex-1 w-full max-w-2xl mx-auto px-4 pt-16 pb-8 space-y-8 fade-in transition-all duration-500 ease-in-out flex flex-col ${
+          generatedPRD ? "" : "items-center justify-center"
         }`}
       >
         <div
-          className={`text-center transition-transform duration-500 ${
-            generatedPRD ? "-translate-y-4" : "translate-y-8"
+          className={`w-full text-center transition-transform duration-500 ${
+            generatedPRD ? "" : "translate-y-8"
           }`}
         >
           <div
@@ -129,13 +130,13 @@ export default function Index() {
               }
             />
           </div>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground mb-6">
             Generate professional Product Requirement Documents in seconds
           </p>
         </div>
 
         <Card
-          className={`glass p-6 transition-transform duration-500 ${
+          className={`glass p-6 transition-transform duration-500 w-full ${
             generatedPRD ? "-translate-y-4" : "translate-y-0"
           }`}
         >
@@ -153,6 +154,11 @@ export default function Index() {
             <ChatInputTextArea
               placeholder="Describe your product idea..."
               maxLength={MAX_CHARS}
+              disabled={isLoading}
+              className={cn(
+                "disabled:cursor-default",
+                isLoading && "select-none"
+              )}
             />
             <div className="flex items-center justify-end w-full mt-2">
               <ChatInputSubmit />
@@ -219,7 +225,7 @@ export default function Index() {
           </Card>
         )}
       </div>
-      <footer className="fixed bottom-4 flex items-center justify-center gap-2 text-sm text-muted-foreground select-none">
+      <footer className="w-full mt-auto px-4 py-4 flex items-center justify-center gap-2 text-sm text-muted-foreground select-none">
         <span className="pointer-events-none">Made by devchristian1337</span>
         <a
           href="https://github.com/devchristian1337"
