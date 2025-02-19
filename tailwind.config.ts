@@ -1,3 +1,4 @@
+import {heroui} from '@heroui/theme';
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
@@ -9,6 +10,7 @@ export default {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./node_modules/@heroui/theme/dist/components/scroll-shadow.js"
   ],
   prefix: "",
   theme: {
@@ -119,5 +121,5 @@ export default {
       },
     },
   },
-  plugins: [animate, typography],
+  plugins: [animate,typography,heroui()],
 } satisfies Config;

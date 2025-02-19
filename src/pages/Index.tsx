@@ -17,6 +17,7 @@ import {
   ChatInputSubmit,
 } from "@/components/ui/chat-input";
 import { geminiService } from "@/services/gemini";
+import { ScrollShadow } from "@heroui/scroll-shadow";
 
 const MAX_CHARS = 500;
 
@@ -210,11 +211,11 @@ export default function Index() {
                 </TooltipProvider>
               </div>
             </div>
-            <div className="prose prose-sm dark:prose-invert max-w-none bg-muted p-4 rounded-lg max-h-[60vh] overflow-y-auto scrollbar-custom">
+            <ScrollShadow className="prose prose-sm dark:prose-invert max-w-none bg-muted p-4 rounded-lg max-h-[60vh] scrollbar-custom">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {generatedPRD}
               </ReactMarkdown>
-            </div>
+            </ScrollShadow>
           </Card>
         )}
       </div>
