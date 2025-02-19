@@ -14,6 +14,7 @@ import {
   ChatInputTextArea,
   ChatInputSubmit,
 } from "@/components/ui/chat-input";
+import { geminiService } from "@/services/gemini";
 
 const MAX_CHARS = 500;
 
@@ -26,38 +27,34 @@ export default function Index() {
   const generationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    if (!prompt.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a prompt first",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Temporary mock response for demo
-    generationTimeoutRef.current = setTimeout(() => {
-      setGeneratedPRD(`
-# Product Overview
-
-Your product description here...
-
-## Tech Stack
-
-- React
-- TypeScript
-- Tailwind CSS
-
-## Core Features
-
-1. Feature One
-2. Feature Two
-3. Feature Three
-      `);
+    try {
+      setIsLoading(true);
+      const response = await geminiService.createPRD(prompt);
+      setGeneratedPRD(response);
+    } catch (error) {
+      console.error("Error generating PRD:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate PRD. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      generationTimeoutRef.current = null;
-    }, 2000);
+    }
   };
 
   const handleStop = () => {
-    if (generationTimeoutRef.current) {
-      clearTimeout(generationTimeoutRef.current);
-      generationTimeoutRef.current = null;
-      setIsLoading(false);
-    }
+    // Currently, we cannot stop the Gemini API call
+    setIsLoading(false);
   };
 
   const copyToClipboard = () => {
