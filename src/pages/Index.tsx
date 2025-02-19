@@ -1,10 +1,19 @@
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ChatInput, ChatInputTextArea, ChatInputSubmit } from "@/components/ui/chat-input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  ChatInput,
+  ChatInputTextArea,
+  ChatInputSubmit,
+} from "@/components/ui/chat-input";
 
 const MAX_CHARS = 500;
 
@@ -14,12 +23,13 @@ export default function Index() {
   const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const { toast } = useToast();
+  const generationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = async () => {
     setIsLoading(true);
 
     // Temporary mock response for demo
-    setTimeout(() => {
+    generationTimeoutRef.current = setTimeout(() => {
       setGeneratedPRD(`
 # Product Overview
 
@@ -38,7 +48,16 @@ Your product description here...
 3. Feature Three
       `);
       setIsLoading(false);
+      generationTimeoutRef.current = null;
     }, 2000);
+  };
+
+  const handleStop = () => {
+    if (generationTimeoutRef.current) {
+      clearTimeout(generationTimeoutRef.current);
+      generationTimeoutRef.current = null;
+      setIsLoading(false);
+    }
   };
 
   const copyToClipboard = () => {
@@ -49,7 +68,7 @@ Your product description here...
         title: "Copied to clipboard",
         description: "Your PRD has been copied to clipboard",
       });
-      
+
       // Reset the copy icon after 2 seconds
       setTimeout(() => {
         setHasCopied(false);
@@ -57,17 +76,53 @@ Your product description here...
     }
   };
 
+  const handleDownload = () => {
+    if (generatedPRD) {
+      const blob = new Blob([generatedPRD], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "PRD.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Downloaded successfully",
+        description: "Your PRD has been downloaded as PRD.md",
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen section-padding flex flex-col items-center">
-      <div className="max-w-4xl w-full space-y-8 fade-in">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight">PRD Generator</h1>
+    <div className="min-h-screen flex items-center justify-center p-4 scrollbar-custom">
+      <div
+        className={`w-full max-w-2xl space-y-8 fade-in transition-all duration-500 ease-in-out ${
+          generatedPRD ? "pt-16" : ""
+        }`}
+      >
+        <div
+          className={`text-center transition-transform duration-500 ${
+            generatedPRD ? "-translate-y-4" : "translate-y-8"
+          }`}
+        >
+          <img
+            src="https://iili.io/2yZBUJ4.png"
+            alt="SpecForge Logo"
+            className="h-12 mx-auto mb-3"
+            aria-label="SpecForge"
+          />
           <p className="text-lg text-muted-foreground">
             Generate professional Product Requirement Documents in seconds
           </p>
         </div>
 
-        <Card className="glass p-6 mx-auto max-w-2xl">
+        <Card
+          className={`glass p-6 transition-transform duration-500 ${
+            generatedPRD ? "-translate-y-4" : "translate-y-0"
+          }`}
+        >
           <ChatInput
             value={prompt}
             onChange={(e) => {
@@ -77,9 +132,9 @@ Your product description here...
             }}
             onSubmit={handleSubmit}
             loading={isLoading}
-            onStop={() => setIsLoading(false)}
+            onStop={handleStop}
           >
-            <ChatInputTextArea 
+            <ChatInputTextArea
               placeholder="Describe your product idea..."
               maxLength={MAX_CHARS}
             />
@@ -90,14 +145,57 @@ Your product description here...
         </Card>
 
         {generatedPRD && (
-          <Card className="glass p-6 space-y-4 fade-in mx-auto max-w-2xl">
+          <Card className="glass p-6 space-y-4 animate-fade-up motion-reduce:animate-none">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Generated PRD</h2>
-              <Button variant="outline" size="icon" onClick={copyToClipboard}>
-                {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
+              <div className="flex gap-2">
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleDownload}
+                        aria-label="Download PRD"
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="px-2 py-1 text-xs"
+                      showArrow={true}
+                    >
+                      Download
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={copyToClipboard}
+                      >
+                        {hasCopied ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="px-2 py-1 text-xs"
+                      showArrow={true}
+                    >
+                      {hasCopied ? "Copied!" : "Copy to clipboard"}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
-            <pre className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded-lg">
+            <pre className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded-lg max-h-[60vh] overflow-y-auto scrollbar-custom">
               {generatedPRD}
             </pre>
           </Card>
