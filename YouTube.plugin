@@ -24,6 +24,7 @@
 [Argument]
 blockUpload = switch, true, false, tag = 隐藏上传按钮, desc = 是否隐藏上传按钮
 blockImmersive = switch, true, false, tag = 隐藏选段按钮, desc = 是否隐藏选段按钮
+captionLang = select, "zh-Hans", "zh-Hant", "ja", "ko", "en", "it", "off", tag = 字幕翻译语言, desc = 选择字幕翻译语言
 lyricLang = select, "zh-Hans", "zh-Hant", "ja", "ko", "en", "off", tag = 歌词翻译语言, desc = 选择歌词翻译语言
 debug = switch, false, true, tag = 启用调试模式, desc = 是否启用调试模式
 
@@ -46,7 +47,7 @@ AND, ((DOMAIN-SUFFIX, youtubei.googleapis.com),  (PROTOCOL, UDP)), REJECT
 [Script]
 # http-request ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:browse|next|player|reel\/reel_watch_sequence|get_watch) script-path = https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.request.preview.js, requires-body = true, binary-body-mode = true, tag = YouTube请求
 
-http-response ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch) script-path = https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.response.preview.js, requires-body = true, binary-body-mode = true, tag = YouTube响应, argument=[{blockUpload},{blockImmersive},"it",{lyricLang},{debug}]
+http-response ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch) script-path = https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.response.preview.js, requires-body = true, binary-body-mode = true, tag = YouTube响应, argument=[{blockUpload},{blockImmersive},{captionLang},{lyricLang},{debug}]
 
 [MitM]
 hostname = -redirector*.googlevideo.com, *.googlevideo.com, www.youtube.com, s.youtube.com, youtubei.googleapis.com
